@@ -1,7 +1,4 @@
 const Discord = require('discord.js');
-<<<<<<< HEAD
-//const math = require(`mathjs`); // New function for cmd:calc
-=======
 const fs = require("fs");
 const bot = new Discord.Client({disableEveryone: true})
 bot.commands = new Discord.Collection();
@@ -22,7 +19,6 @@ fs.readdir("./commands/", (err, files) => {
     bot.commands.set(props.help.name, props)
     })
 })
->>>>>>> 939bfdd12b8af4c28e3eb2f8a5b0a2926e01fb07
 
 const client = new Discord.Client();
 exports.client = client;
