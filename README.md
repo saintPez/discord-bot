@@ -16,3 +16,18 @@ bot de disocrd
     }
 }
 ```
+
+## Usage (14-05-2020)
+
+* Commands
+» help
+» ban
+» info
+» avatar
+» clear
+» calc
+
+* Bugs
+
+» No works cmd:calc, is closed the command
+» cmd:clear don´t read permissions, the member can use.

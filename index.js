@@ -1,25 +1,5 @@
 const Discord = require('discord.js');
 //const math = require(`mathjs`); // New function for cmd:calc
-const fs = require("fs");
-const bot = new Discord.Client({disableEveryone: true})
-bot.commands = new Discord.Collection();
-
-fs.readdir("./commands/", (err, files) => {
-
-    if (err) console.log(err);
-
-    let jsfile = files.filter(f => f.split(".").pop() === "js")
-    if(jsfile.length <= 0){
-        console.log ("Couldn´t file commands.")
-        return;
-    }
-
-    jsfile.forEach((f, i) =>{
-    let props = require(`./commands/${f}`);
-    console.log(`» ${f} loaded!`)
-    bot.commands.set(props.help.name, props)
-    })
-})
 
 const client = new Discord.Client();
 exports.client = client;
@@ -32,19 +12,13 @@ client.once("ready", () => {
 
 client.on('message', async message => {
 
-    /*if (!message.content.startsWith(prefix)) return;*/
+    if (!message.content.startsWith(prefix)) return;
     if (message.author.bot) return;
 
-    //const args = message.content.slice(prefix.length).trim().split(/ +/g);
-    //const command = args.shift().toLowerCase();
+    const args = message.content.slice(prefix.length).trim().split(/ +/g);
+    const command = args.shift().toLowerCase();
 
-    let messageArray = message.content.split(" ");
-    let cmd = messageArray[0];
-    //let args = messageArray.slice(1);
-
-    let commandfile = bot.command.get(cmd.slice(prefix.length));
-    if(commandfile) commandfile.run(bot.message.args)
-    /*if(command === 'info') {
+    if(command === 'info') {
         let status = {
             "online": "Online",
             "offline": "Offline",
@@ -124,7 +98,7 @@ client.on('message', async message => {
 
         message.channel.send(embed);
     }*/
-    /*if(command === 'help') {
+    if(command === 'help') {
         let usuario = message.mentions.members.first() || message.member;
         if (!message.member.roles.cache.find(r => r.name === "STAFF")) { // Commands of member (i don´t know why work like this)
             const embed = new Discord.MessageEmbed()
@@ -143,7 +117,7 @@ client.on('message', async message => {
             embed.setFooter(activity.name)
             return message.author.send(embed)
         }
-     }*/
+     }
 });
 
 function deleteBotMessage(channel, time, num) {
