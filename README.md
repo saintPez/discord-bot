@@ -17,13 +17,13 @@ bot de disocrd
     "time_delete": 3000,
     "lenguage": {
         "command": "comando",
-        "commands": {
-            "help": "ayuda",
-            "info": "info",
-            "avatar": "avatar",
-            "clear": "clear",
-            "ban": "ban"
-        },
+        "commands": [
+            {"use": "help", "name": "ayuda"},
+            {"use": "info", "name": "info"},
+            {"use": "avatar", "name": "avatar"},
+            {"use": "clear", "name": "clear"},
+            {"use": "ban", "name": "ban"}
+        ],
         "command_not_allowed": "No tienes permiso para usar este comando",
         "syntax": "Sintaxis",
         "error": "ERROR",
@@ -56,7 +56,8 @@ bot de disocrd
             }
         },
         "user_information": "Información de usuario",
-        "avatar_info": "El avatar del usuario es"
+        "avatar_info": "El avatar del usuario es",
+        "user": "Usuario"
     }
 }
 ```
