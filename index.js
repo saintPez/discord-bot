@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const {name, token, prefix, activity, time_delete, lenguage} = require("./config.json");
+const commands = require('./commands/index');
 
 client.once("ready", () => {
     console.log(name + ' - Bot');
@@ -15,7 +16,9 @@ client.on('message', async message => {
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
 
-    if(command === '') {
+    commands.executeCommand(message, command, args);
+
+    /*if(command === '') {
         await message.channel.bulkDelete(1);
         await message.channel.send(`${lenguage.syntax}: `+"`"+`${prefix}${lenguage.command} [${lenguage.required}] (${lenguage.optional})`+"`"+``);
         deleteBotMessage(message.channel, 1);
@@ -88,7 +91,7 @@ client.on('message', async message => {
         embed.setImage(user.user.displayAvatarURL());
         embed.setFooter(activity.name);
         return message.channel.send(embed);
-    }
+    }*/
     /*if(command === lenguage.commands.ban) {
         if (!message.member.roles.cache.find(r => r.name === "STAFF")) return message.channel.send("You don´t have permissions of STAFF");
         const args = message.content.slice(prefix.length).trim().split(/ +/g);    
@@ -155,3 +158,4 @@ function deleteBotMessage(channel, num) {
 }
 
 client.login(token);
+module.exports = client;
