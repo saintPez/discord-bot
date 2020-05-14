@@ -1,28 +1,6 @@
 const Discord = require('discord.js');
-const fs = require("fs");
-const bot = new Discord.Client({disableEveryone: true})
-bot.commands = new Discord.Collection();
-
-fs.readdir("./commands/", (err, files) => {
-
-    if (err) console.log(err);
-
-    let jsfile = files.filter(f => f.split(".").pop() === "js")
-    if(jsfile.length <= 0){
-        console.log ("Couldn´t file commands.")
-        return;
-    }
-
-    jsfile.forEach((f, i) =>{
-    let props = require(`./commands/${f}`);
-    console.log(`» ${f} loaded!`)
-    bot.commands.set(props.help.name, props)
-    })
-})
-
 const client = new Discord.Client();
-exports.client = client;
-const {name, token, prefix, activity} = require("./config.json");
+const {name, token, prefix, activity, time_delete, lenguage} = require("./config.json");
 
 client.once("ready", () => {
     console.log(name + ' - Bot');
@@ -37,50 +15,81 @@ client.on('message', async message => {
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
 
-    if(command === 'info') {
-        let status = {
-            "online": "Online",
-            "offline": "Offline",
-            "idle": "Occupied",
-            "dnd": "Do not bother"
-         }
-          
-         let user = message.mentions.members.first() || message.member;
-         let embed = new Discord.MessageEmbed()
-         embed.setColor("RANDOM")
-         embed.setDescription(`User info of`, `${user.user.username}`)
-         embed.addField(`Name`, `${user.user.tag}`)
-         embed.addField(`ID`, `${user.id}`)
-         embed.addField(`Status`, `${status[user.presence.status]}`)
-         return message.channel.send(embed)
+    if(command === '') {
+        await message.channel.bulkDelete(1);
+        await message.channel.send(`${lenguage.syntax}: `+"`"+`${prefix}${lenguage.command} [${lenguage.required}] (${lenguage.optional})`+"`"+``);
+        deleteBotMessage(message.channel, 1);
     }
-    if(command === 'clear') { // Not works, when don´t have permission can use the command.
-        const args = message.content.slice(prefix.length).trim().split(/ +/g);
-        const fetched = await message.channel.messages.fetch({limit: args[1]});;
-        let member = message.mentions.members.first() || client.users.cache.get(args[0]);
-        message.channel.bulkDelete(fetched).catch(error => error)
-        if (!message.member.roles.cache.find(r => r.name === "STAFF")) return message.channel.send("You don´t have permissions of STAFF");
-        if(!member)
-            return message.channel.send("» Syntax: !clear <number messages to delete>")  
-        if(!member.bannable) 
-            return message.channel.send("You don´t have permissions STAFF")
-        if (!args[1]) return message.channel.send("I´m deleted a big quantity of messages.");
-        message.channel.bulkDelete(`${args[1]}`).then(() => {
-            message.channel.send(`Cleared ${args[1]} messages`)
+
+    if(command === lenguage.commands.info) {
+        await message.channel.bulkDelete(1);
+        const user = message.mentions.members.first() || message.member;
+        const embed = new Discord.MessageEmbed();
+        embed.setColor(`${lenguage.status[user.presence.status].color}`);
+        embed.setDescription(`${lenguage.user_information}`, `${user.user.username}`);
+        embed.addField(`${lenguage.name}`, `${user.user.tag}`);
+        embed.addField(`${lenguage.id}`, `${user.id}`);
+        embed.addField(`${lenguage.status.name}`, `${lenguage.status[user.presence.status].name}`);
+        return message.channel.send(embed);
+    }
+    if(command === lenguage.commands.clear) {
+        if(!message.member.hasPermission("MANAGE_MESSAGES")) {
+            await message.channel.bulkDelete(1);
+            await message.channel.send(`${lenguage.error}: ${lenguage.command_not_allowed}`);
+            deleteBotMessage(message.channel, 1);
         }
-    )};
-    if(command === 'avatar') {
-        let usuario = message.mentions.members.first() || message.member;
-        let embed = new Discord.MessageEmbed()
-        embed.setAuthor(client.user.username, client.user.avatarURL)
-        embed.setThumbnail(client.user.avatarURL)
-        embed.setColor("RANDOM")
-        embed.setTitle(`The avatar of the shit user is: @${usuario.user.username}`)
-        embed.setImage(usuario.user.displayAvatarURL())
-        embed.setFooter(activity.name)
-        return message.channel.send(embed)
+        else if(!args[0]) {
+            try{
+                await message.channel.bulkDelete(1);
+                await message.channel.send(`${lenguage.syntax}: `+'`'+`${prefix}${lenguage.commands.clear} [${lenguage.amount}] (${lenguage.channel})`+'`'+``);
+                deleteBotMessage(message.channel, 1);
+            }
+            catch(e) {
+                console.log(e);
+            }
+        }
+        else if(!args[1]){
+            try{
+                await message.channel.bulkDelete(parseInt(args[0]) + 1);
+                message.channel.send(`${lenguage.info}: ${lenguage.deleted_messages}`);
+                deleteBotMessage(message.channel, 1);
+            }
+            catch(e) {
+                console.log(e);
+                await message.channel.bulkDelete(1);
+                message.channel.send(`${lenguage.error}: ${lenguage.invalid_amount}`);
+                deleteBotMessage(message.channel, 1);
+            }
+        }
+        else
+        {
+            try{
+                await message.channel.bulkDelete(1);
+                const channel = message.mentions.channels.first() || message.channel;
+                await channel.bulkDelete(parseInt(args[0]) + 1);
+                message.channel.send(`${lenguage.info}: ${lenguage.deleted_messages}`);
+                deleteBotMessage(message.channel, 1);
+            }
+            catch(e) {
+                console.log(e);
+                await message.channel.bulkDelete(1);
+                message.channel.send(`${lenguage.error}: ${lenguage.invalid_amount}`);
+                deleteBotMessage(message.channel, 3000, 1);
+            }
+        }
     }
-    if(command === 'ban') {
+    if(command === lenguage.commands.avatar) {
+        const user = message.mentions.members.first() || message.member;
+        const embed = new Discord.MessageEmbed();
+        embed.setAuthor(client.user.username, client.user.avatarURL);
+        embed.setThumbnail(client.user.avatarURL);
+        embed.setColor(`${lenguage.status[user.presence.status].color}`);
+        embed.setTitle(`${lenguage.avatar_info}: @${user.user.username}`);
+        embed.setImage(user.user.displayAvatarURL());
+        embed.setFooter(activity.name);
+        return message.channel.send(embed);
+    }
+    /*if(command === lenguage.commands.ban) {
         if (!message.member.roles.cache.find(r => r.name === "STAFF")) return message.channel.send("You don´t have permissions of STAFF");
         const args = message.content.slice(prefix.length).trim().split(/ +/g);    
           let member = message.mentions.members.first() || client.users.cache.get(args[0]);
@@ -94,12 +103,7 @@ client.on('message', async message => {
             .catch(error => message.reply(`Sorry ${message.author} you don´t have permissions because: ${error}`))
             message.channel.send("Success!")
     }
-    if(command === 'testclear') {
-        await message.channel.bulkDelete(1);
-        await message.channel.send('» Syntax: !testclear <require> <optional>');
-        deleteBotMessage(message.channel, 3000, 1);
-    }
-    /*if(command === 'calc') { // This is a frustrate function :( help ThePez
+    if(command === 'calc') { // This is a frustrate function :( help ThePez
         if (args[0]) return message.channel.send('Plase imput a calculation');
 
         let resp;
@@ -116,8 +120,8 @@ client.on('message', async message => {
             .setField('Output' , `\n${resp}`)
 
         message.channel.send(embed);
-    }*/
-    if(command === 'help') {
+    }
+    if(command === lenguage.commands.help) {
         let usuario = message.mentions.members.first() || message.member;
         if (!message.member.roles.cache.find(r => r.name === "STAFF")) { // Commands of member (i don´t know why work like this)
             const embed = new Discord.MessageEmbed()
@@ -136,14 +140,14 @@ client.on('message', async message => {
             embed.setFooter(activity.name)
             return message.author.send(embed)
         }
-     }
+    }*/
 });
 
-function deleteBotMessage(channel, time, num) {
+function deleteBotMessage(channel, num) {
     try {
         setTimeout( () => {
             channel.bulkDelete(num);
-        }, time);
+        }, time_delete);
     }
     catch(e) {
         console.log(e);
