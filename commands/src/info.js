@@ -12,7 +12,7 @@ module.exports.use = async (message, args, index) => {
     embed.addField(`${lenguage.id}`, `${user.id}`);
     embed.addField(`${lenguage.status.name}`, `${lenguage.status[user.presence.status].name}`);
     message.channel.send(embed);
-    if(!args[0]) {
+    if (!args[0]) {
         message.channel.send(`${lenguage.syntax}: ` + '`' + `${prefix}${lenguage.commands[index].use} (@${lenguage.user})` + '`');
         utils.deleteBotMessage(message.channel, 1);
     }

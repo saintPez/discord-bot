@@ -1,6 +1,7 @@
-const Discord = require('discord.js');
-const client = require('../../index');
+const { lenguage } = require('../../config.json');
 
 module.exports.use = async (message, args, index) => {
-    message.channel.send('Ping?').then(m => m.edit(`API: ${m.createdTimestamp - message.createdTimestamp}ms. Web Socket: ${Math.round(client.ws.ping)}ms.`))
+    const ping = Date.now() - message.createdTimestamp;
+    message.channel.sendMessage(`${lenguage.ping}: ${ping} ms`);
+    return true;
 }
