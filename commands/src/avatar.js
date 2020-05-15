@@ -13,7 +13,7 @@ module.exports.use = async (message, args, index) => {
     embed.setImage(user.user.displayAvatarURL());
     embed.setFooter(name);
     message.channel.send(embed);
-    if(!args[0]) {
+    if (!args[0]) {
         message.channel.send(`${lenguage.syntax}: ` + '`' + `${prefix}${lenguage.commands[index].use} (@${lenguage.user})` + '`');
         utils.deleteBotMessage(message.channel, 1);
     }
