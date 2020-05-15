@@ -22,6 +22,9 @@ bot de disocrd
             {"use": "info", "name": "info"},
             {"use": "avatar", "name": "avatar"},
             {"use": "clear", "name": "clear"},
+            {"use": "ping", "name": "ping"},
+            {"use": "status", "name": "status"},
+            {"use": "random", "name": "random"},
             {"use": "ban", "name": "ban"}
         ],
         "command_not_allowed": "No tienes permiso para usar este comando",
@@ -61,3 +64,14 @@ bot de disocrd
     }
 }
 ```
+
+# Update
+
+» Creé los comandos "ping", "random" y "status".
+Comando = ping: Registra el ping.
+Comando = random: muestra imagenes aleatorias con un mensaje aleatorio (little bug)
+Comando = status: muestra las estadisticas del servidor de discord.
+
+» Añadí `guildMemberRemove` y `guildMemberAdd` los cuales muestran un pequeño mensaje al entrar o salir un usuario (fase beta, muy simple)
+
+» Organizé mi codigo
