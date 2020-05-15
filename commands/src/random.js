@@ -1,5 +1,5 @@
-const Discord = require('discord.js');
-const client = require('../../index');
+const Discord = require("discord.js");
+const client = require("../../index");
 
 const rando_imgs = [
   "https://a.wattpad.com/cover/153628217-352-k378860.jpg",
@@ -14,7 +14,7 @@ const rando_imgs = [
   "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSB8pO8XmVx6yxpt1o8Ue6Hm2qgF0zyNTDqq2FdWkiW91oLIgXi&usqp=CAU",
   "https://3.bp.blogspot.com/-94bqTNWHWu8/V51imNFbYuI/AAAAAAAACPM/eRwLund7XQg7dEXrUVV0UAIrxude_O15wCLcB/s1600/2016-05-22%2B%252815%2529%2Brandom%2B19%2B11%2B15.png",
   "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/%C3%81lvaro_Uribe_%28cropped%29.jpg/220px-%C3%81lvaro_Uribe_%28cropped%29.jpg",
-]
+];
 
 const rando_text = [
   `Puta que rico`,
@@ -31,12 +31,12 @@ const rando_text = [
   `agua de mariscos`,
   `sopa de ahuyama`,
   `uribe paraco`,
-]
+];
 
-module.exports.use = async (message) => { // Bug undefined in a text
+module.exports.use = async (message) => {
+  // Bug undefined in a text
   const embed = new Discord.MessageEmbed();
   embed.addField(rando_text[Math.floor(Math.random())]);
   embed.setThumbnail(rando_imgs[Math.floor(Math.random() * rando_imgs.length)]); // No encontré la forma para enviarlas normal :(
   message.channel.send(embed);
-}
-
+};
