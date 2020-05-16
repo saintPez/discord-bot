@@ -5,6 +5,7 @@ bot de disocrd
 ## Usage
 
 * Crear `.env`
-```TOKEN=TOKEN
+```env
+TOKEN=TOKEN
 PREFIX=!
 ```
