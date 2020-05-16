@@ -1,8 +1,12 @@
-const utils = require('../../utils/index');
-const { lenguage } = require('../../config.json');
+import { config } from 'dotenv';
+config();
+import { commands, lenguage } from '../config.json';
 
-module.exports.use = async (message, args, index) => {
-    if (!message.member.hasPermission("MANAGE_MESSAGES")) {
+import Discord from 'discord.js';
+const utils = require('../utils/index');
+
+module.exports.use = async (message: Discord.Message, args: string, index: number) => {
+    if (!message.member?.hasPermission("MANAGE_MESSAGES")) {
         await message.channel.bulkDelete(1);
         await message.channel.send(`${lenguage.error}: ${lenguage.command_not_allowed}`);
         utils.deleteBotMessage(message.channel, 1);
@@ -10,7 +14,7 @@ module.exports.use = async (message, args, index) => {
     else if (!args[0]) {
         try {
             await message.channel.bulkDelete(1);
-            await message.channel.send(`${lenguage.syntax}: ` + '`' + `${prefix}${lenguage.commands[index].use} [${lenguage.amount}] (${lenguage.channel})` + '`' + ``);
+            await message.channel.send(`${lenguage.syntax}: ` + '`' + `${process.env.PREFIX}${commands[index].use} [${lenguage.amount}] (${lenguage.channel})` + '`' + ``);
             utils.deleteBotMessage(message.channel, 1);
         }
         catch (e) {
@@ -46,4 +50,4 @@ module.exports.use = async (message, args, index) => {
         }
     }
     return true;
-}
+};
